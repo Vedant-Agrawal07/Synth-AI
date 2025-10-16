@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: `${process.env.FRONTEND_URL}` }));
 const port = 5122;
 
 // const ai = new GoogleGenAI();

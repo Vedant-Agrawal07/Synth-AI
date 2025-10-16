@@ -20,6 +20,8 @@ export default function SynthAI() {
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState(false);
 
+const endpoint = import.meta.env.VITE_API_URL;
+
   function FancySummary({ summary }) {
     return (
       <div className="prose prose-slate max-w-none p-6 bg-white rounded-2xl shadow-lg">
@@ -62,7 +64,9 @@ export default function SynthAI() {
     setIsLoading(true);
     setSummary(""); // clear previous summary
     try {
-      const result = await axios.get(`/transcript?url=${youtubeUrl}`);
+      const result = await axios.get(
+        `${endpoint}/transcript?url=${youtubeUrl}`
+      );
       setSummary(result.data.summary);
     } catch (error) {
       console.error("YouTube summarization failed:", error);
@@ -77,7 +81,7 @@ export default function SynthAI() {
     const selectedFile = files[0];
     const formData = new FormData();
     formData.append("file", selectedFile);
-    const result = await axios.post("/file-summary", formData);
+    const result = await axios.post(`${endpoint}/file-summary`, formData);
     setSummary(result.data.summary);
   };
 
