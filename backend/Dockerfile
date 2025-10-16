@@ -1,24 +1,33 @@
-# Use Python image (make sure it has python3)
-FROM python:3.11-slim
+# Use Node as base image
+FROM node:20-bullseye
+
+# Install Python and pip
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy your backend files
-COPY . .
+# Copy Node dependencies first
+COPY package*.json ./
 
-# Create a virtual environment
+# Install Node dependencies
+RUN npm install
+
+# Copy Python requirements
+COPY requirements.txt ./
+
+# Create Python virtual environment
 RUN python3 -m venv venv
-
-# Activate venv and install Python dependencies
 RUN ./venv/bin/pip install --upgrade pip
 RUN ./venv/bin/pip install -r requirements.txt
 
-# Make sure Node dependencies are installed
-RUN npm install
+# Copy the rest of the backend code
+COPY . .
 
 # Expose Node server port
 EXPOSE 5122
 
-# Start your Node server
+# Start Node server
 CMD ["node", "server.js"]
